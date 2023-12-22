@@ -59,7 +59,9 @@
 ---
 # 5.  MIDI를 악보화하는 방법
 
-## [midi_to_sheet.py](./midi_to_sheet.py) 사용
+- [midi_to_sheet.py](./midi_to_sheet.py)
+  - MuseScore 3 는 CLI로 실행 가능
+  - subprocess 모듈을 사용하여 외부 프로그램 MuseScore 3 실행
 ```python
     # 미디 폴더를 지정
     midi_folder = "./Moon_test_folder/midi/"
