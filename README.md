@@ -6,6 +6,7 @@
 # 2. Role & Responsibility
 
 - 참여 인원: 3인
+  
   - 문 정 환: MuseScore3를 이용한 MIDI to Sheet 개발 / MIDI, 악보 데이터 가공
   - 윤 희 승: CycleGAN 설계 및 학습 / Flask 웹 어플리케이션 제작
   - 최 명 수: Onset frame Model을 이용한 Wav to MIDI 개발 / MIDI, 악보 데이터 가공
