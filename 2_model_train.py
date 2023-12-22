@@ -162,7 +162,7 @@ def save_models(step, g_model_AtoB, g_model_BtoA):
 
 
 # generate samples and save as a plot and save the model
-def summarize_performance(step, g_model, trainX, name, n_samples=5, is_midi=True):
+def summarize_performance(step, g_model, trainX, name, n_samples=5):
     # select a sample of input images
     X_in, _ = generate_real_samples(trainX, n_samples, 0)
     # generate translated images
@@ -174,17 +174,13 @@ def summarize_performance(step, g_model, trainX, name, n_samples=5, is_midi=True
     # plot real images
     for i in range(n_samples):
         plt.subplot(2, n_samples, 1 + i)
-        if is_midi:
-            plt.plot(range(128), np.multiply(np.where(X_in[i,:128,:128,0] > 0, 1, 0), range(1, 129)), marker='.',markersize=1, linestyle='')
         plt.axis('off')
-        plt.imshow(X_in[i])
+        plt.imshow(X_in[i], cmap='gray')
     # plot translated image
     for i in range(n_samples):
         plt.subplot(2, n_samples, 1 + n_samples + i)
-        if not is_midi:
-            plt.plot(range(128), np.multiply(np.where(X_out[i,:128,:128,0] > 0, 1, 0), range(1, 129)), marker='.',markersize=1, linestyle='')
         plt.axis('off')
-        plt.imshow(X_out[i])
+        plt.imshow(X_out[i], cmap='gray')
     # save plot to file
     filename1 = './images/%s_generated_plot_%06d.png' % (name, (step+1))
     plt.savefig(filename1)
@@ -248,9 +244,9 @@ def train(d_model_A, d_model_B, g_model_AtoB, g_model_BtoA, c_model_AtoB, c_mode
         # evaluate the model performance every so often
         if (i+1) % (bat_per_epo * 1) == 0:
             # plot A->B translation
-            summarize_performance(i, g_model_AtoB, trainA, 'AtoB', is_midi=True)
+            summarize_performance(i, g_model_AtoB, trainA, 'AtoB')
             # plot B->A translation
-            summarize_performance(i, g_model_BtoA, trainB, 'BtoA', is_midi=False)
+            summarize_performance(i, g_model_BtoA, trainB, 'BtoA')
         if (i+1) % (bat_per_epo * 5) == 0:
             # save the models
             save_models(i, g_model_AtoB, g_model_BtoA)
@@ -258,7 +254,7 @@ def train(d_model_A, d_model_B, g_model_AtoB, g_model_BtoA, c_model_AtoB, c_mode
 
 if __name__ == "__main__":
 
-    shape =128
+    shape =256
     midi = load_real_samples('./data/midi_({}, {}).npy'.format(shape,shape))
     sheet = load_real_samples('./data/sheet_({}, {}).npy'.format(shape,shape))
     print(midi.shape, sheet.shape)

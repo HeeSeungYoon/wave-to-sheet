@@ -189,28 +189,31 @@ if __name__ == '__main__':
     path = './midi_and_sheet/'
     midi_files = glob.glob(path + '*.mid')
     midis = []
-    for file in tqdm(midi_files):
+    for file in midi_files:
         try:
             midi = Read_midi(file, 4).read_file()
             midi = dict_to_matrix(midi)
-            # midi = np.pad(midi,[(0,0),(0,128)],'constant',constant_values=0)
+            midi = midi.T
             midis.append(midi)
         except:
             continue
 
+    size = 256
+
     for i in range(len(midis)):
-        padding = np.array([[0]*128]*(128-len(midis[i])))
-        if len(midis[i]) < 128:
-            midis[i] = np.concatenate([midis[i], padding])
-        elif len(midis[i]) > 128:
-            midis[i] = midis[i][:128]
+        midis[i] = np.resize(midis[i],(size, size))
 
     # visualizing midi file
-    # for midi, file in zip(midis,midi_files):
-    #     plt.plot(range(midi.shape[0]), np.multiply(np.where(midi > 0, 1, 0), range(1, 129)), marker='.',
-    #              markersize=1, linestyle='')
-    #     plt.title(file)
-    #     plt.show()
+    for midi, file in tqdm(zip(midis,midi_files), total=len(midis)):
+        # plt.plot(range(midi.shape[0]), np.multiply(np.where(midi > 0, 1, 0), range(1, 129)), marker='.',
+        #          markersize=1, linestyle='')
+        # plt.title(file)
+        plt.imshow(midi, cmap='gray')
+        if not os.path.isdir('./images/midi'):
+            os.mkdir('./images/midi')
+        img_file = './images/midi/{}.png'.format(os.path.basename(file))
+        plt.savefig(img_file)
+    plt.close()
 
     midis = np.asarray(midis)
     midis = np.expand_dims(midis, axis=3)
